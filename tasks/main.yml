@@ -11,6 +11,7 @@
         - "{{ ansible_facts.os_family }}.yml"
       paths:
         - vars
+  tags: role_opendkim_include_vars
 - name: Include variable file
   ansible.builtin.include_vars:
     file: "{{ variable_file }}"
