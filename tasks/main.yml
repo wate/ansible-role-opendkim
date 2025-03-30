@@ -1,6 +1,6 @@
 # code: language=ansible
 ---
-- name: Find pratform variable file
+- name: Find platform variable file
   ansible.builtin.set_fact:
     variable_file: "{{ lookup('first_found', params, errors='ignore') }}"
   vars:
@@ -15,23 +15,20 @@
   ansible.builtin.include_vars:
     file: "{{ variable_file }}"
   when: variable_file | length > 0
+  tags: role_opendkim_include_vars
 - name: Import dependency task
   ansible.builtin.import_tasks:
     file: dependency.yml
-  tags:
-    - role_opendkim_dependency
+  tags: role_opendkim_dependency
 - name: Import package task
   ansible.builtin.import_tasks:
     file: package.yml
-  tags:
-    - role_opendkim_package
+  tags: role_opendkim_package
 - name: Import setting task
   ansible.builtin.import_tasks:
     file: setting.yml
-  tags:
-    - role_opendkim_setting
+  tags: role_opendkim_setting
 - name: Import service task
   ansible.builtin.import_tasks:
     file: service.yml
-  tags:
-    - role_opendkim_service
+  tags: role_opendkim_service
