@@ -32,7 +32,7 @@ DKIMセレクター
 
 #### `opendkim_rsa_keylen`
 
-opendkim-gkeygenで鍵を生成する時のキー長
+opendkim-genkeyで鍵を生成する時のキー長
 
 #### `opendkim_port`
 
