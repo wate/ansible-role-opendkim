@@ -25,6 +25,8 @@
         that:
           - ansible_facts.packages['opendkim'] is defined
           - ansible_facts.packages['opendkim-tools'] is defined
+        fail_msg: "OpenDKIM packages are not installed"
+        success_msg: "OpenDKIM packages are installed"
     ## ユーザーのテスト
     - name: Test user
       block:
@@ -38,6 +40,8 @@
           ansible.builtin.assert:
             that:
               - user_check_result is not changed
+            fail_msg: "opendkim user is not properly configured"
+            success_msg: "opendkim user is properly configured"
     ## グループのテスト
     - name: Test group
       block:
@@ -51,6 +55,8 @@
           ansible.builtin.assert:
             that:
               - group_check_result is not changed
+            fail_msg: "www-data group is not properly configured"
+            success_msg: "www-data group is properly configured"
     # ファイルのテスト
     - name: Test files
       block:
@@ -62,6 +68,8 @@
           ansible.builtin.assert:
             that:
               - result.stat.exists
+            fail_msg: "OpenDKIM KeyTable is missing"
+            success_msg: "OpenDKIM KeyTable exists"
         - name: Check SigningTable setting
           ansible.builtin.stat:
             path: /etc/opendkim/SigningTable
@@ -70,6 +78,8 @@
           ansible.builtin.assert:
             that:
               - result.stat.exists
+            fail_msg: "OpenDKIM SigningTable is missing"
+            success_msg: "OpenDKIM SigningTable exists"
         - name: Check TrustedHosts setting
           ansible.builtin.stat:
             path: /etc/opendkim/TrustedHosts
@@ -78,6 +88,8 @@
           ansible.builtin.assert:
             that:
               - result.stat.exists
+            fail_msg: "OpenDKIM TrustedHosts is missing"
+            success_msg: "OpenDKIM TrustedHosts exists"
     ## サービスのテスト
     - name: Assert service
       ansible.builtin.assert:
@@ -85,11 +97,15 @@
           - ansible_facts.services['opendkim.service'] is defined
           - ansible_facts.services['opendkim.service']['state'] == 'running'
           - ansible_facts.services['opendkim.service']['status'] == 'enabled'
+        fail_msg: "opendkim service is not running or not enabled"
+        success_msg: "opendkim service is running and enabled"
     ## ポートのテスト
     - name: Assert port
       ansible.builtin.assert:
         that:
           - 8891 in listen_tcp_posts
+        fail_msg: "OpenDKIM is not listening on port 8891"
+        success_msg: "OpenDKIM is listening on port 8891"
     ## OpenDKIMとPostfixの連携確認
     - name: Find log
       ansible.builtin.shell:
@@ -100,6 +116,8 @@
       ansible.builtin.assert:
         that:
           - grep_result.stdout_lines | length > 0
+        fail_msg: "OpenDKIM startup log entry not found"
+        success_msg: "OpenDKIM startup log entry found"
     - name: Display DNS Configuration and Testing
       ansible.builtin.debug:
         msg: |

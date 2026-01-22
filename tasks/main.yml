@@ -15,7 +15,9 @@
 - name: Include variable file
   ansible.builtin.include_vars:
     file: "{{ variable_file }}"
-  when: variable_file | length > 0
+  when:
+    - variable_file is not none
+    - variable_file | length > 0
   tags: role_opendkim_include_vars
 - name: Import dependency task
   ansible.builtin.import_tasks:
