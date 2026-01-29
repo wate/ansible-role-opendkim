@@ -30,33 +30,29 @@
     ## ユーザーのテスト
     - name: Test user
       block:
-        - name: Check user
-          ansible.builtin.user:
-            name: opendkim
-            system: true
-          register: user_check_result
-          check_mode: true
+        - name: Get user facts
+          ansible.builtin.getent:
+            database: passwd
+            key: opendkim
         - name: Assert user
           ansible.builtin.assert:
             that:
-              - user_check_result is not changed
-            fail_msg: "opendkim user is not properly configured"
-            success_msg: "opendkim user is properly configured"
+              - getent_passwd['opendkim'] is defined
+            fail_msg: "opendkim user does not exist"
+            success_msg: "opendkim user exists"
     ## グループのテスト
     - name: Test group
       block:
-        - name: Check group
-          ansible.builtin.group:
-            name: www-data
-            system: true
-          check_mode: true
-          register: group_check_result
+        - name: Get group facts
+          ansible.builtin.getent:
+            database: group
+            key: www-data
         - name: Assert group
           ansible.builtin.assert:
             that:
-              - group_check_result is not changed
-            fail_msg: "www-data group is not properly configured"
-            success_msg: "www-data group is properly configured"
+              - getent_group['www-data'] is defined
+            fail_msg: "www-data group does not exist"
+            success_msg: "www-data group exists"
     # ファイルのテスト
     - name: Test files
       block:
