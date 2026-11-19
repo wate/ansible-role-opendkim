@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: opendkim
+  namespace: wate
   author: yoshiaki tanaka
   description: Setup OpenDKIM
   license: Apache
